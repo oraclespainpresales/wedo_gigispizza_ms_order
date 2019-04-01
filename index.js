@@ -3,41 +3,49 @@ process.env.ORA_SDTZ = 'UTC';
 
 const express = require('express');
 var bodyParser = require('body-parser')
+
 // Constants
 const PORT = 8080;
 const HOST = 'localhost';
 
 const dbmanager = require("./dbmanager.js")
 
-// App
 const app = express();
 // parse application/json
 app.use(bodyParser.json())
 
+//################## Table Management #####################
 app.get('/dropTable', async (req, res) => {
     let resDB = await dbmanager.dropTable()
     res.send(resDB);
 });
 
-// App
 app.get('/createTable', async (req, res) => {
     let resDB = await dbmanager.createTable()
     res.send(resDB);
 });
+//################## End - Table Management #####################
 
-// App
+/* Insert Order
+*  Payload:
+*  {"orderId":"#ID",
+*   *whatever*}
+*/
 app.post('/insertValue', async (req, res) => {
   let resDB = await dbmanager.insertValue(req.body.orderId ,req.body)
   res.send(resDB);
 });
 
-// App
+/* Get Order
+*  Payload:
+*  {"orderId":"#ID"}
+*/
 app.post('/queryTable', async (req, res) => {
   let resDB = await dbmanager.queryTable(req.body.orderId)
   res.send(resDB);
 });
 
-// App
+//Get the last element inserted
 app.get('/lastInsert', async (req, res) => {
   let resDB = await dbmanager.queryTableAll()
   resDB.rows.forEach(element => {

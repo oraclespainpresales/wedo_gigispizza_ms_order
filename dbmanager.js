@@ -1,7 +1,7 @@
 var oracledb = require('oracledb');
 var dbConfig = require('./dbconfig.js');
 
-//################### DROP DB ####################
+//################### DROP Table ####################
 async function dropTable() {
     let connection;
     try {
@@ -14,8 +14,7 @@ async function dropTable() {
             connectString: dbConfig.connectString
         });
 
-        // Create a table
-
+        // Drop a table
         await connection.execute(
             `BEGIN
          EXECUTE IMMEDIATE 'DROP TABLE pizzaOrder';
@@ -42,7 +41,7 @@ async function dropTable() {
     }
 }
 
-//################### DROP DB ####################
+//################### Create Table ####################
 async function createTable() {
     let connection;
     try {
@@ -56,7 +55,6 @@ async function createTable() {
         });
 
         // Create a table
-
         await connection.execute(
             `CREATE TABLE pizzaOrder (id VARCHAR2(20), data VARCHAR2(910), timestamp NUMBER)`);
 
@@ -96,11 +94,8 @@ async function insertValue(id,data) {
         console.log("Insert: id: " + id, "Data: " + data)
         let date = Date.now()
         binds = [[id, JSON.stringify(data), date]];
-
-        // For a complete list of options see the documentation.
         options = {
             autoCommit: true,
-            // batchErrors: true,  // continue processing even if there are data errors
             bindDefs: [
                 { type: oracledb.STRING, maxSize: 20 },
                 { type: oracledb.STRING, maxSize: 32767 },
@@ -128,7 +123,7 @@ async function insertValue(id,data) {
 }
 
 
-//################### Insert Value ####################
+//################### Get Value ####################
 async function queryTable(id) {
     let connection;
     let result;
@@ -142,17 +137,12 @@ async function queryTable(id) {
             connectString: dbConfig.connectString
         });
 
-        // Query the data
 
         sql = "SELECT id, data FROM pizzaOrder WHERE id = '"+ id +"' AND data IS JSON";
-
         binds = {};
-
-        // For a complete list of options see the documentation.
         options = {
-            outFormat: oracledb.OBJECT   // query result format
-            // extendedMetaData: true,   // get extra metadata
-            // fetchArraySize: 100       // internal buffer allocation size for tuning
+            outFormat: oracledb.OBJECT  
+
         };
 
         result = await connection.execute(sql, binds, options);
@@ -190,17 +180,12 @@ async function queryTableAll() {
             connectString: dbConfig.connectString
         });
 
-        // Query the data
+
 
         sql = "SELECT id, data FROM pizzaOrder WHERE data IS JSON";
-
         binds = {};
-
-        // For a complete list of options see the documentation.
         options = {
             outFormat: oracledb.OBJECT   // query result format
-            // extendedMetaData: true,   // get extra metadata
-            // fetchArraySize: 100       // internal buffer allocation size for tuning
         };
 
         result = await connection.execute(sql, binds, options);
