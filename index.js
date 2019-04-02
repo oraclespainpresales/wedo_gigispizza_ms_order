@@ -6,7 +6,7 @@ var bodyParser = require('body-parser')
 
 // Constants
 const PORT = 8080;
-const HOST = 'localhost';
+const HOST = '0.0.0.0';
 
 const dbmanager = require("./dbmanager.js")
 
