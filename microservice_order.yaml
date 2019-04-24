@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
       - name: microservice-order
-        image: wedoinfra/wedodevops/msorder:latest
+        image:  fra.ocir.io/wedoinfra/wedodevops/msorder:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
