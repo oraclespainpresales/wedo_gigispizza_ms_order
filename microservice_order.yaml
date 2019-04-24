@@ -15,7 +15,7 @@
 #
 
 kind: Deployment
-apiVersion: extensions/v1
+apiVersion: apps/v1
 metadata:
   name: microservice-order
 spec:
