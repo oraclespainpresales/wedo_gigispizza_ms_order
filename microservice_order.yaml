@@ -33,7 +33,7 @@ spec:
         ports:
         - containerPort: 8080
       imagePullSecrets:
-      - name: ocirsecret
+      - name: ocirsecret2
       restartPolicy: Always
 ---
 kind: Service
