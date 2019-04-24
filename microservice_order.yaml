@@ -27,13 +27,13 @@ spec:
         version: v1
     spec:
       containers:
-        - name: microservice-order
-          image: wedoinfra/wedodevops/msorder:latest
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 8080
+      - name: microservice-order
+        image: wedoinfra/wedodevops/msorder:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
       imagePullSecrets:
-        - name: ocirsecret
+      - name: ocirsecret
       restartPolicy: Always
 ---
 kind: Service
