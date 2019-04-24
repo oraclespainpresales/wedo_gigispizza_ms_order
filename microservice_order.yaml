@@ -14,6 +14,28 @@
 # limitations under the License.
 #
 
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: microservice-order
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: microservice-order
+        version: v1
+    spec:
+      containers:
+        - name: microservice-order
+          image: wedoinfra/wedodevops/msorder:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+      imagePullSecrets:
+        - name: ocirsecret
+      restartPolicy: Always
+---
 kind: Service
 apiVersion: v1
 metadata:
@@ -28,23 +50,4 @@ spec:
   - port: 8080
     targetPort: 8080
     name: http
----
-kind: Deployment
-apiVersion: extensions/v1beta1
-metadata:
-  name: microservice-order
-spec:
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: microservice-order
-        version: v1
-    spec:
-      containers:
-      - name: microservice-order
-        image: fharris/microservice_order
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 8080
 ---
