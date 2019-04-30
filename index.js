@@ -5,8 +5,8 @@ const express = require('express');
 var bodyParser = require('body-parser')
 
 // Constants
-const PORT = 8080;
-const HOST = '0.0.0.0';
+const PORT = 8080 || process.env.ORD_PORT;
+const HOST = '0.0.0.0' || process.env.ORD_HOST;
 
 const dbmanager = require("./dbmanager.js")
 
@@ -41,12 +41,20 @@ app.post('/insertValue', async (req, res) => {
 *  {"orderId":"#ID"}
 */
 app.post('/queryTable', async (req, res) => {
-  let resDB = await dbmanager.queryTable(req.body.orderId)
-  res.send(resDB);
+  if(req.body['orderId'] == null || req.body['orderId'] == ""){
+    let resDB = await dbmanager.queryTableAll()
+    resDB.rows.forEach(element => {
+      element.DATA.dateTimeOrderTaken
+    });
+    res.send(resDB);
+  }else{
+    let resDB = await dbmanager.queryTable(req.body.orderId)
+    res.send(resDB);
+}
 });
 
 //Get the last element inserted
-app.get('/lastInsert', async (req, res) => {
+app.get('/getAll', async (req, res) => {
   let resDB = await dbmanager.queryTableAll()
   resDB.rows.forEach(element => {
     element.DATA.dateTimeOrderTaken
