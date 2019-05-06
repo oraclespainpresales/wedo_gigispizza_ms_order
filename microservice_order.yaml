@@ -48,7 +48,8 @@ metadata:
   labels:
     app: microservice-order
 spec:
-  type: NodePort
+  type: LoadBalancer
+  loadBalancerIP: 132.145.243.207
   selector:
     app: microservice-order
   ports:
