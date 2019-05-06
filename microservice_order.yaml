@@ -19,8 +19,6 @@ apiVersion: extensions/v1beta1
 metadata:
   name: microservice-order
   namespace: default
-  annotations:
-    external-dns.alpha.kubernetes.io/hostname: www.gigis.pizza.madrid.com
 spec:
   replicas: 1
   template:
@@ -52,7 +50,7 @@ metadata:
   labels:
     app: microservice-order
 spec:
-  type: LoadBalancer
+  type: NodePort
   selector:
     app: microservice-order
   ports:
