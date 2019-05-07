@@ -18,6 +18,7 @@ kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
   name: microservice-order
+  namespace: default
 spec:
   replicas: 1
   template:
@@ -45,6 +46,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: microservice-order
+  namespace: default
   labels:
     app: microservice-order
 spec:
