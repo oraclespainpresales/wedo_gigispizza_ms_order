@@ -53,6 +53,7 @@ app.post('/queryTable', async (req, res) => {
     resDB.rows.forEach(element => {
       resList.push(JSON.parse(element.DATA))
     });
+    console.log("INFO queryTable: " + resList)
     res.send(resList);
   }else{
     let resDB = await dbmanager.queryTable(req.body.orderId)
