@@ -32,7 +32,13 @@ app.get('/createTable', async (req, res) => {
 *   *whatever*}
 */
 app.post('/insertValue', async (req, res) => {
-  let resDB = await dbmanager.insertValue(req.body.orderId ,req.body)
+  let now = new Date();
+  let month = now.getMonth() + 1
+  let orderId = now.getFullYear().toString() + month.toString() + now.getDate().toString() + now.getSeconds().toString()
+  let record = req.body
+  record['orderId'] = orderId
+  let resDB = await dbmanager.insertValue(orderId ,record)
+  resDB['orderId'] = orderId
   res.send(resDB);
 });
 
@@ -43,10 +49,11 @@ app.post('/insertValue', async (req, res) => {
 app.post('/queryTable', async (req, res) => {
   if(req.body['orderId'] == null || req.body['orderId'] == ""){
     let resDB = await dbmanager.queryTableAll()
+    let resList = []
     resDB.rows.forEach(element => {
-      element.DATA.dateTimeOrderTaken
+      resList.push(JSON.parse(element.DATA))
     });
-    res.send(resDB);
+    res.send(resList);
   }else{
     let resDB = await dbmanager.queryTable(req.body.orderId)
     res.send(resDB);
