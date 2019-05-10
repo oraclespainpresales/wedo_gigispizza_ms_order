@@ -32,9 +32,8 @@ app.get('/createTable', async (req, res) => {
 *   *whatever*}
 */
 app.post('/insertValue', async (req, res) => {
-  let now = new Date();
-  let month = now.getMonth() + 1
-  let orderId = now.getFullYear().toString() + month.toString() + now.getDate().toString() + now.getSeconds().toString()
+  
+  let orderId = getDateId();
   let record = req.body
   record['orderId'] = orderId
   let resDB = await dbmanager.insertValue(orderId ,record)
@@ -73,3 +72,26 @@ app.get('/getAll', async (req, res) => {
 app.listen(PORT, HOST);
 console.log(`Running on http://${HOST}:${PORT}`);
 
+function getDateId(){
+  let now = new Date()
+
+  let year = now.getFullYear().toString()
+
+  let month = now.getMonth() + 1
+  month = (("0" + month).slice(-2))
+
+  let day = now.getDate()
+  day = (("0" + day).slice(-2))
+
+  let hours = now.getHours();
+  hours = ("0" + hours).slice(-2);
+
+  let minutes = now.getMinutes()
+  minutes = ("0" + minutes).slice(-2);
+
+  let seconds = now.getSeconds()
+  seconds = ("0" + seconds).slice(-2);
+
+  let orderId = year + month + day + hours + minutes + seconds
+  return orderId
+}
