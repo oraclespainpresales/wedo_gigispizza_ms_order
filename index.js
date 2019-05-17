@@ -4,7 +4,7 @@ process.env.ORA_SDTZ = 'UTC';
 const express = require('express');
 var bodyParser = require('body-parser');
 //##################Stream Messages POST###################
-var querystring = require('querystring');
+var querystring = require('qs');
 var http = require('http');
 
 // Constants
@@ -103,7 +103,7 @@ function getDateId(){
 
 function postToStream(codestring) {
   // Build the post string from an object
-  var post_data = querystring.stringify({
+  var post_data = qs.stringify({
      "messages":
           [
                 {
@@ -131,10 +131,15 @@ function postToStream(codestring) {
 
   // Set up the request
   var post_req = http.request(post_options, function(res) {
-      res.setEncoding('utf8');
-      res.on('data', function (chunk) {
-          console.log('Response: ' + chunk);
-      });
+      try{
+          res.setEncoding('utf8');
+          res.on('data', function (chunk) {
+              console.log('Response: ' + chunk);
+          });
+      } 
+      catch (e){
+          console.log("ERROR STREAM:" + e);
+      }
   });
 
   // post the data
