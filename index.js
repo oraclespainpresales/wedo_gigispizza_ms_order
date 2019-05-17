@@ -117,9 +117,10 @@ function postToStream(codestring) {
           ]
   });
 
+  //https://soa.wedoteam.io',
   // An object of options to indicate where to post to
   var post_options = {
-      host: 'https://130.61.94.91' //https://soa.wedoteam.io',
+      host: 'https://130.61.94.91',
       port: '443',
       path: '/wedodevops/publish/madrid/devops',
       method: 'POST',
