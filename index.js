@@ -152,4 +152,7 @@ function postToStream(codestring) {
   // post the data
   post_req.write(post_data);
   post_req.end();
+  post_req.on('error', function (e) {
+    console.error(e);
+  });
 }
