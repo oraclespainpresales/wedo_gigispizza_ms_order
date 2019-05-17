@@ -71,7 +71,8 @@ kind: Service
 apiVersion: v1
 metadata:
   name: soa.wedoteam.io
+  namespace: default
 spec:
   type: ExternalName
   externalName: soa.wedoteam.io
- ---
+---
