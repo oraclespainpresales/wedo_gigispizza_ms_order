@@ -48,18 +48,26 @@ app.post('/insertValue', async (req, res) => {
 *  {"orderId":"#ID"}
 */
 app.post('/queryTable', async (req, res) => {
-  if(req.body['orderId'] == null || req.body['orderId'] == ""){
-    let resDB = await dbmanager.queryTableAll()
-    let resList = []
-    resDB.rows.forEach(element => {
-      resList.push(JSON.parse(element.DATA))
-    });
-    console.log("INFO queryTable: " + resList)
-    res.send(resList);
-  }else{
-    let resDB = await dbmanager.queryTable(req.body.orderId)
-    res.send(resDB);
-}
+  try{
+      postToStream("/queryTable operatio...");
+  }
+  catch(e){
+      console.log ("ERROR msorder en /queryTable: " + e);
+  }
+  finally{
+      if(req.body['orderId'] == null || req.body['orderId'] == ""){
+        let resDB = await dbmanager.queryTableAll()
+        let resList = []
+        resDB.rows.forEach(element => {
+          resList.push(JSON.parse(element.DATA))
+        });
+        console.log("INFO queryTable: " + resList)
+        res.send(resList);
+      }else{
+        let resDB = await dbmanager.queryTable(req.body.orderId)
+        res.send(resDB);
+      }
+  }
 });
 
 //Get the last element inserted
