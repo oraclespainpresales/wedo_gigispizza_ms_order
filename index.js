@@ -2,8 +2,8 @@ process.env.ORA_SDTZ = 'UTC';
 'use strict';
 
 const express = require('express');
-var bodyParser = require('body-parser')
-#Stream Messages POST
+var bodyParser = require('body-parser');
+//##################Stream Messages POST###################
 var querystring = require('querystring');
 var http = require('http');
 
