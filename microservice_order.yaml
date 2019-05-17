@@ -58,3 +58,11 @@ spec:
     targetPort: 8080
     name: http
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kube-dns
+  namespace: kube-system
+data:
+  upstreamNameservers: |
+    ["8.8.8.8"]
