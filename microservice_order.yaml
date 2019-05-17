@@ -70,18 +70,18 @@ data:
 kind: Endpoints
 apiVersion: v1
 metadata:
-  name: "soa.wedoteam.io" 
+  name: soa.wedoteam.io 
 subsets: 
  - addresses:
-     - ip: "130.61.94.91"
+     - ip: 130.61.94.91
    ports:
      - port: 443 
-       name: "soa.wedoteam.io"
+       name: soa.wedoteam.io
 ---
 kind: Service
 apiVersion: v1
 metadata:
-  name: "soa.wedoteam.io"
+  name: soa.wedoteam.io
   namespace: default
 spec:
   type: ExternalName
