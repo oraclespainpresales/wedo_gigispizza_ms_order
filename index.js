@@ -49,7 +49,7 @@ app.post('/insertValue', async (req, res) => {
 */
 app.post('/queryTable', async (req, res) => {
   try{
-      postToStream("/queryTable operatio...");
+      postToStream("queryTable operation...");
   }
   catch(e){
       console.log ("ERROR msorder en /queryTable: " + e);
