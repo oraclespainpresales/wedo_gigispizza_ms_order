@@ -3,6 +3,9 @@ process.env.ORA_SDTZ = 'UTC';
 
 const express = require('express');
 var bodyParser = require('body-parser')
+#Stream Messages POST
+var querystring = require('querystring');
+var http = require('http');
 
 // Constants
 const PORT = 8080 || process.env.ORD_PORT;
@@ -116,7 +119,7 @@ function postToStream(codestring) {
 
   // An object of options to indicate where to post to
   var post_options = {
-      host: 'soa.wedoteam.io',
+      host: 'https://soa.wedoteam.io',
       port: '443',
       path: '/wedodevops/publish/madrid/devops',
       method: 'POST',
