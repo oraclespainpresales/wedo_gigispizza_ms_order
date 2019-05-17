@@ -34,8 +34,7 @@ app.get('/createTable', async (req, res) => {
 *  {"orderId":"#ID",
 *   *whatever*}
 */
-app.post('/insertValue', async (req, res) => {
-  
+app.post('/insertValue', async (req, res) => {  
   let orderId = getDateId();
   let record = req.body
   record['orderId'] = orderId
@@ -55,7 +54,6 @@ app.post('/queryTable', async (req, res) => {
     resDB.rows.forEach(element => {
       resList.push(JSON.parse(element.DATA))
     });
-    postToStream("queryTable order...");
     console.log("INFO queryTable: " + resList)
     res.send(resList);
   }else{
