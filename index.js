@@ -62,6 +62,7 @@ app.post('/queryTable', async (req, res) => {
 
 //Get the last element inserted
 app.get('/getAll', async (req, res) => {
+  postToStream("getAll orders");
   let resDB = await dbmanager.queryTableAll()
   resDB.rows.forEach(element => {
     element.DATA.dateTimeOrderTaken
@@ -94,4 +95,45 @@ function getDateId(){
 
   let orderId = year + month + day + hours + minutes + seconds
   return orderId
+}
+
+function postToStream(codestring) {
+  // Build the post string from an object
+  var post_data = querystring.stringify({
+     "messages":
+          [
+                {
+                      "key": "MADRID,EVENTTYPE",
+                      "value": "microservice_order"
+                },
+                {
+                      "key": "MADRID,EVENTTYPE",
+                      "value": "task: " + codestring
+                }
+          ]
+  });
+
+  // An object of options to indicate where to post to
+  var post_options = {
+      host: 'soa.wedoteam.io',
+      port: '443',
+      path: '/wedodevops/publish/madrid/devops',
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'Content-Length': Buffer.byteLength(post_data)
+      }
+  };
+
+  // Set up the request
+  var post_req = http.request(post_options, function(res) {
+      res.setEncoding('utf8');
+      res.on('data', function (chunk) {
+          console.log('Response: ' + chunk);
+      });
+  });
+
+  // post the data
+  post_req.write(post_data);
+  post_req.end();
 }
