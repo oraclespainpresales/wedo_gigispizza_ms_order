@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 //##################Stream Messages POST###################
 var qs = require('qs');
 var http = require('http');
+const axios = require('axios')
 
 // Constants
 const PORT = 8080 || process.env.ORD_PORT;
@@ -107,7 +108,7 @@ function getDateId(){
   return orderId
 }
 
-function postToStream(codestring) {
+function postToStreamOld(codestring) {
   // Build the post string from an object
   var post_data = qs.stringify({
      "messages":
@@ -154,5 +155,45 @@ function postToStream(codestring) {
   post_req.end();
   post_req.on('error', function (e) {
     console.error(e);
+  });
+}
+//############################ POST Axios ###################################
+function postToStream(codestring) {
+  // Build the post string from an object
+  var post_data = qs.stringify({
+     "messages":
+          [
+            {
+              "key": "MADRID,EVENTTYPE",
+              "value": "microservice_order"
+            },
+            {
+               "key": "MADRID,EVENTTYPE",
+               "value": "task: " + codestring
+            }
+          ]
+  });
+
+  //https://soa.wedoteam.io', https://130.61.94.91, streams
+  // An object of options to indicate where to post to
+  var post_options = {
+      baseURL: 'https://soa.wedoteam.io',
+      port: '443',
+      url: '/wedodevops/publish/madrid/devops',
+      method: 'post',
+      headers: {
+          'Content-Type': 'application/json',
+          'Content-Length': Buffer.byteLength(post_data)
+      }
+  };
+
+  axios.post('https://soa.wedoteam.io/wedodevops/publish/madrid/devops', post_data, headers: {
+          'Content-Type': 'application/json',
+          'Content-Length': Buffer.byteLength(post_data)
+  }).then((res) => {
+      console.log(" AXIOS statusCode: " + res.statusCode)
+      console.log(res)
+  }).catch((error) => {
+      console.error("AXIOS ERROR: " + error)
   });
 }
