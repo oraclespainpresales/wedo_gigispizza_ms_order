@@ -160,7 +160,7 @@ function postToStreamOld(codestring) {
 //############################ POST Axios ###################################
 function postToStream(codestring) {
   // Build the post string from an object
-  var post_data = qs.stringify({
+  var post_data = JSON.stringify({
      "messages":
           [
             {
