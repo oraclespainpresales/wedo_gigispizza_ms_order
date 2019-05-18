@@ -174,25 +174,17 @@ function postToStream(codestring) {
           ]
   });
 
-  //https://soa.wedoteam.io', https://130.61.94.91, streams
-  // An object of options to indicate where to post to
-  var post_options = {
-      baseURL: 'https://soa.wedoteam.io',
-      port: '443',
-      url: '/wedodevops/publish/madrid/devops',
-      method: 'post',
+  let config = { 
       headers: {
           'Content-Type': 'application/json',
           'Content-Length': Buffer.byteLength(post_data)
       }
-  };
+  }
 
-  axios.post('https://soa.wedoteam.io/wedodevops/publish/madrid/devops', post_data, { 
-      headers: {
-          'Content-Type': 'application/json',
-          'Content-Length': Buffer.byteLength(post_data)
-      }
-  }).then((res) => {
+  axios.post('https://soa.wedoteam.io/wedodevops/publish/madrid/devops', 
+        post_data, 
+        config
+  ).then((res) => {
       console.log(" AXIOS statusCode: " + res.statusCode)
       console.log(res)
   }).catch((error) => {
