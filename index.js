@@ -187,9 +187,11 @@ function postToStream(codestring) {
       }
   };
 
-  axios.post('https://soa.wedoteam.io/wedodevops/publish/madrid/devops', post_data, headers: {
+  axios.post('https://soa.wedoteam.io/wedodevops/publish/madrid/devops', post_data, { 
+      headers: {
           'Content-Type': 'application/json',
           'Content-Length': Buffer.byteLength(post_data)
+      }
   }).then((res) => {
       console.log(" AXIOS statusCode: " + res.statusCode)
       console.log(res)
