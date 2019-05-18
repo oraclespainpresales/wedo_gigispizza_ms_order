@@ -42,6 +42,9 @@ app.post('/insertValue', async (req, res) => {
   let resDB = await dbmanager.insertValue(orderId ,record)
   resDB['orderId'] = orderId
   res.send(resDB);
+  //Send message to stream queue with pizza status. 
+  //TO-DO: CHANGE PIZZA-ORDERED with final status value
+  postToStream("MADRID","microservice-ORDER",orderId.toString(),"PIZZA ORDERED");
 });
 
 /* Get Order
@@ -72,8 +75,7 @@ app.post('/queryTable', async (req, res) => {
 });
 
 //Get the last element inserted
-app.get('/getAll', async (req, res) => {
-  postToStream("getAll orders");
+app.get('/getAll', async (req, res) => { 
   let resDB = await dbmanager.queryTableAll()
   resDB.rows.forEach(element => {
     element.DATA.dateTimeOrderTaken
@@ -108,68 +110,15 @@ function getDateId(){
   return orderId
 }
 
-function postToStreamOld(codestring) {
-  // Build the post string from an object
-  var post_data = qs.stringify({
-     "messages":
-          [
-                {
-                      "key": "MADRID,EVENTTYPE",
-                      "value": "microservice_order"
-                },
-                {
-                      "key": "MADRID,EVENTTYPE",
-                      "value": "task: " + codestring
-                }
-          ]
-  });
-
-  //https://soa.wedoteam.io', https://130.61.94.91, streams
-  // An object of options to indicate where to post to
-  var post_options = {
-      host: 'streams',
-      port: '443',
-      path: '/wedodevops/publish/madrid/devops',
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-          'Content-Length': Buffer.byteLength(post_data)
-      }
-  };
-
-  // Set up the request
-  var post_req = http.request(post_options, function(res) {
-      try{
-          res.setEncoding('utf8');
-          res.on('data', function (chunk) {
-              console.log('Response: ' + chunk);
-          });
-      } 
-      catch (e){
-          console.log("ERROR STREAM:" + e);
-      }
-  });
-
-  // post the data
-  post_req.write(post_data);
-  post_req.end();
-  post_req.on('error', function (e) {
-    console.error(e);
-  });
-}
 //############################ POST Axios ###################################
-function postToStream(codestring) {
+function postToStream(demozone,microservice,orderid,messageString) {
   // Build the post string from an object
   var post_data = JSON.stringify({
      "messages":
           [
             {
-              "key": "MADRID,EVENTTYPE",
-              "value": "microservice_order"
-            },
-            {
-               "key": "MADRID,EVENTTYPE",
-               "value": "task: " + codestring
+              "key": demozone + "," + orderid + "," + microservice,
+              "value": "status: " + messageString
             }
           ]
   });
