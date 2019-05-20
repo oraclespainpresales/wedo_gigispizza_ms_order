@@ -57,18 +57,16 @@ app.post('/insertValue', async (req, res) => {
 *  {"orderId":"#ID","status":"#status"}
 */
 app.put('/updateValue', async (req, res) => {   
-  try{
-    let orderid = req.body.orderId;
-    let status  = req.body.status;
-    console.log("Info: Param Received -> " + JSON.stringify(req.body));
-    let resDB = await dbmanager.updateValue(orderid,"",status)
+  let orderid = req.body.orderId;
+  let status  = req.body.status;
+  console.log("Info: Param Received -> " + JSON.stringify(req.body));
+  await dbmanager.updateValue(orderid,"",status).then((resDB) => { 
     res.send(resDB);
     //Send message to stream queue with pizza status. 
     postToStream(demozone,"ORDER-STATUS",orderid.toString(),status.toString());
-  }
-  catch (err){
-    console.error("Error: updateValue-> " + err);
-  }
+  }).catch((err) => {
+    console.log("Error: updateValue-> " + err);
+  })    
 });
 
 /* Get Order
