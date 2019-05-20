@@ -146,11 +146,11 @@ async function updateValue (id,field,value) {
         console.log("Info: data to update->" + JSON.stringify(jsonData));
         binds = [[id,jsonData]];
         options = {
-            autoCommit: true,
-            bindDefs: [
+            autoCommit: true
+            /*bindDefs: [
                 { type: oracledb.STRING, maxSize: 20 },
                 { type: oracledb.STRING, maxSize: 32767 }                
-            ]
+            ]*/
         };
         result = await connection.execute(sql, binds, options);
         console.log("Info: Number of rows modified:", result.rowsAffected);
