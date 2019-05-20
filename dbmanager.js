@@ -138,12 +138,13 @@ async function updateValue (id,field,value) {
         jsonData = await queryTable(id);
         if (jsonData == undefined) 
             throw Error ("orderId not found!");
-        console.log("Info: " + jsonData.status);
+        console.log("Info: order status-> " + jsonData.status);
         jsonData.status = value;
+        console.log("Info: new order status-> " + jsonData.status);
         //Update data field
         sql = "UPDATE pizzaOrder SET data = :2 WHERE id = :1";
-        console.log("Info: " + JSON.stringify(data));
-        binds = [[id,JSON.stringify(data)]];
+        console.log("Info: " + JSON.stringify(jsonData));
+        binds = [[id,JSON.stringify(jsonData)]];
         options = {
             autoCommit: true,
             bindDefs: [
