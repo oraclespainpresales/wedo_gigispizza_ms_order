@@ -142,10 +142,9 @@ async function updateValue (id,field,value) {
         jsonData.status = value;
         console.log("Info: new order status-> " + jsonData.status);
         //Update data field
-        sql = "UPDATE pizzaOrder SET data = '"+JSON.stringify(jsonData)+"' WHERE id = "+id
+        sql = "UPDATE pizzaOrder SET data = :2 WHERE id = :1";
         console.log("Info: data to update-> " + JSON.stringify(jsonData));
-        console.log("Info: sql-> " + sql);
-        binds = {};
+        binds = [[id, JSON.stringify(jsonData).toString()]];
         options = {
             autoCommit: true
             /*bindDefs: [
