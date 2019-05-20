@@ -143,7 +143,7 @@ async function updateValue (id,field,value) {
         result = await connection.execute(sql, binds, options);
         console.log("Number of rows modified:", result.rowsAffected);
     } catch (err) {
-        console.error("Error: updateValue-> " + err);
+        console.error("updateValue-> " + err);
         return error
     } finally {
         if (connection) {
