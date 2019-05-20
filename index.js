@@ -65,7 +65,7 @@ app.put('/updateValue', async (req, res) => {
     //Send message to stream queue with pizza status. 
     postToStream(demozone,"ORDER-STATUS",orderid.toString(),status.toString());
   }).catch((err) => {
-    console.log("Error: updateValue-> " + err);
+    console.log("Error: index-updateValue-> " + err);
   })    
 });
 
