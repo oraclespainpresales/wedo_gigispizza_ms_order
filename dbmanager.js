@@ -122,24 +122,20 @@ async function insertValue(id,data) {
     }
 }
 
-//################### Insert Value ####################
-async function changeStatus(id,status) {
+//################### Update Value ####################
+async function updateValue(id,field,value) {
     let connection;
     let result;
     try {
-
         let sql, binds, options;
-
         connection = await oracledb.getConnection({
             user: dbConfig.user,
             password: dbConfig.password,
             connectString: dbConfig.connectString
         });
-
-        // Insert some data
-
-        sql = "UPDATE pizzaOrder po SET po.data.order.status=:2 WHERE po.id=:1";
-        console.log("UPDATE pizzaOrder po SET po.data.order.status='" + status + "' WHERE po.id = '" + id + "'");
+        //Update fields
+        sql = "UPDATE pizzaOrder po SET po." + field + "=:2 WHERE po.id=:1";
+        console.log("UPDATE pizzaOrder po SET po." + field + "='" + status + "' WHERE po.id = '" + id + "'");
         binds = [[id, JSON.stringify(status)]];
         options = {
             autoCommit: true,

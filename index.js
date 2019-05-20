@@ -74,11 +74,11 @@ app.get('/getAll', async (req, res) => {
 });
 
 //Change pizza order status
-/* changeStatus
+/* updateValue
 *  Payload:
 *  {"orderId":"#ID","status":"#status"}
 */
-app.put('/changeStatus', async (req, res) => { 
+app.put('/updateValue', async (req, res) => { 
   if(req.body['orderId'] == null || req.body['orderId'] == ""){
     console.log("CHANGE STATUS ERROR - No orderID");
     res.send("{'error':'no orderid sended!'}");  
@@ -90,7 +90,7 @@ app.put('/changeStatus', async (req, res) => {
   else {
     let orderid = req.body.orderid;
     let status  = req.body.status;
-    let resDB = await dbmanager.changeStatus(orderid,status)
+    let resDB = await dbmanager.updateValue(orderid,"data.order.status",status)
     res.send(resDB);
     //Send message to stream queue with pizza status. 
     postToStream("MADRID","microservice-ORDER",orderId.toString(),status.toString());
