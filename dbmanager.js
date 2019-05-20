@@ -134,15 +134,11 @@ async function updateValue(id,field,value) {
             connectString: dbConfig.connectString
         });
         //Update fields
-        sql = "UPDATE pizzaOrder po SET po." + field + "=:2 WHERE po.id=:1";
-        console.log("UPDATE pizzaOrder po SET po." + field + "='" + status + "' WHERE po.id = '" + id + "'");
-        binds = [[id, JSON.stringify(status)]];
+        sql = "UPDATE pizzaOrder po SET po." + field + "='" + value + "' WHERE po.id = '" + id + "'";
+        console.log("Info: " + sql.toString());
+        binds = {};
         options = {
             autoCommit: true,
-            bindDefs: [
-                { type: oracledb.STRING, maxSize: 20 },
-                { type: oracledb.STRING, maxSize: 50 },
-            ]
         };
 
         result = await connection.executeMany(sql, binds, options);

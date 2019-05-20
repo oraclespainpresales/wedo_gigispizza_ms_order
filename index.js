@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 const axios = require('axios')
 
 // Constants
+const demozone = "MADRID";
 const PORT = 8080 || process.env.ORD_PORT;
 const HOST = '0.0.0.0' || process.env.ORD_HOST;
 
@@ -42,7 +43,21 @@ app.post('/insertValue', async (req, res) => {
   resDB['orderId'] = orderId
   res.send(resDB);
   //Send message to stream queue with pizza status. 
-  postToStream("MADRID","microservice-ORDER",orderId.toString(),record['status'].toString());
+  postToStream(demozone,"microservice-ORDER",orderId.toString(),record['status'].toString());
+});
+
+//Change pizza order status
+/* updateValue
+*  Payload:
+*  {"orderId":"#ID","status":"#status"}
+*/
+app.put('/updateValue', async (req, res) => {   
+  let orderid = req.body.orderId;
+  let status  = req.body.status;
+  let resDB = await dbmanager.updateValue(orderid,"data.order.status",status)
+  res.send(resDB);
+  //Send message to stream queue with pizza status. 
+  postToStream(demozone,"microservice-ORDER",orderId.toString(),status.toString());
 });
 
 /* Get Order
@@ -71,30 +86,6 @@ app.get('/getAll', async (req, res) => {
     element.DATA.dateTimeOrderTaken
   });
   res.send(resDB);
-});
-
-//Change pizza order status
-/* updateValue
-*  Payload:
-*  {"orderId":"#ID","status":"#status"}
-*/
-app.put('/updateValue', async (req, res) => { 
-  if(req.body['orderId'] == null || req.body['orderId'] == ""){
-    console.log("CHANGE STATUS ERROR - No orderID");
-    res.send("{'error':'no orderid sended!'}");  
-  }
-  else if(req.body['status'] == null || req.body['status'] == "") {
-    console.log("CHANGE STATUS ERROR - No status");
-    res.send("{'error':'no status sended!'}");
-  }
-  else {
-    let orderid = req.body.orderid;
-    let status  = req.body.status;
-    let resDB = await dbmanager.updateValue(orderid,"data.order.status",status)
-    res.send(resDB);
-    //Send message to stream queue with pizza status. 
-    postToStream("MADRID","microservice-ORDER",orderId.toString(),status.toString());
-  }
 });
 
 app.listen(PORT, HOST);
