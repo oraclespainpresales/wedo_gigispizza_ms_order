@@ -134,16 +134,14 @@ async function updateValue (id,field,value) {
             connectString: dbConfig.connectString
         });
         //Update fields
-        sql = "UPDATE pizzaOrder po SET po." + field + "='" + value + "' WHERE po.id = '" + id + "'";
+        sql = "UPDATE pizzaOrder po SET po." + field + " = :val WHERE po.id = :id";
         console.log("Info: " + sql.toString());
-        binds = {};
+        binds = {id:id,val:value};
         options = {
-            autoCommit: true,
+            autoCommit: true
         };
-
-        result = await connection.executeMany(sql, binds, options);
+        result = await connection.execute(sql, binds, options);
         console.log("Number of rows modified:", result.rowsAffected);
-
     } catch (err) {
         console.error("Error: updateValue-> " + err);
         return error
