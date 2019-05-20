@@ -4,8 +4,6 @@ process.env.ORA_SDTZ = 'UTC';
 const express = require('express');
 var bodyParser = require('body-parser');
 //##################Stream Messages POST###################
-var qs = require('qs');
-var http = require('http');
 const axios = require('axios')
 
 // Constants
@@ -39,12 +37,12 @@ app.post('/insertValue', async (req, res) => {
   let orderId = getDateId();
   let record = req.body
   record['orderId'] = orderId
+  record['status'] = "PIZZA ORDERED" //Pizza status
   let resDB = await dbmanager.insertValue(orderId ,record)
   resDB['orderId'] = orderId
   res.send(resDB);
   //Send message to stream queue with pizza status. 
-  //TO-DO: CHANGE PIZZA-ORDERED with final status value
-  postToStream("MADRID","microservice-ORDER",orderId.toString(),"PIZZA ORDERED");
+  postToStream("MADRID","microservice-ORDER",orderId.toString(),record['status'].toString());
 });
 
 /* Get Order
@@ -73,6 +71,30 @@ app.get('/getAll', async (req, res) => {
     element.DATA.dateTimeOrderTaken
   });
   res.send(resDB);
+});
+
+//Change pizza order status
+/* changeStatus
+*  Payload:
+*  {"orderId":"#ID","status":"#status"}
+*/
+app.put('/changeStatus', async (req, res) => { 
+  if(req.body['orderId'] == null || req.body['orderId'] == ""){
+    console.log("CHANGE STATUS ERROR - No orderID");
+    res.send("{'error':'no orderid sended!'}");  
+  }
+  else if(req.body['status'] == null || req.body['status'] == "") {
+    console.log("CHANGE STATUS ERROR - No status");
+    res.send("{'error':'no status sended!'}");
+  }
+  else {
+    let orderid = req.body.orderid;
+    let status  = req.body.status;
+    let resDB = await dbmanager.changeStatus(orderid,status)
+    res.send(resDB);
+    //Send message to stream queue with pizza status. 
+    postToStream("MADRID","microservice-ORDER",orderId.toString(),status.toString());
+  }
 });
 
 app.listen(PORT, HOST);

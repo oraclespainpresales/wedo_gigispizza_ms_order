@@ -122,6 +122,52 @@ async function insertValue(id,data) {
     }
 }
 
+//################### Insert Value ####################
+async function changeStatus(id,status) {
+    let connection;
+    let result;
+    try {
+
+        let sql, binds, options;
+
+        connection = await oracledb.getConnection({
+            user: dbConfig.user,
+            password: dbConfig.password,
+            connectString: dbConfig.connectString
+        });
+
+        // Insert some data
+
+        sql = "UPDATE pizzaOrder po SET po.data.order.status=:2 WHERE po.id=:1";
+        console.log("UPDATE pizzaOrder po SET po.data.order.status='" + status + "' WHERE po.id = '" + id + "'");
+        binds = [[id, JSON.stringify(status)]];
+        options = {
+            autoCommit: true,
+            bindDefs: [
+                { type: oracledb.STRING, maxSize: 20 },
+                { type: oracledb.STRING, maxSize: 50 },
+            ]
+        };
+
+        result = await connection.executeMany(sql, binds, options);
+        console.log("Number of rows inserted:", result.rowsAffected);
+
+    } catch (err) {
+        console.error(err);
+        return error
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+                return result
+            } catch (err) {
+                console.error(err);
+                return error
+            }
+        }
+    }
+}
+
 
 //################### Get Value ####################
 async function queryTable(id) {
@@ -142,7 +188,6 @@ async function queryTable(id) {
         binds = {};
         options = {
             outFormat: oracledb.OBJECT  
-
         };
 
         result = await connection.execute(sql, binds, options);
