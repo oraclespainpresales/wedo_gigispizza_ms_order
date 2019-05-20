@@ -144,7 +144,7 @@ async function updateValue (id,field,value) {
         //Update data field
         sql = "UPDATE pizzaOrder SET data = :2 WHERE id = :1";
         console.log("Info: data to update->" + JSON.stringify(jsonData));
-        binds = [[id,JSON.stringify(jsonData)]];
+        binds = [[id,jsonData]];
         options = {
             autoCommit: true,
             bindDefs: [
@@ -156,7 +156,7 @@ async function updateValue (id,field,value) {
         console.log("Info: Number of rows modified:", result.rowsAffected);
     } catch (err) {
         console.error("Error: updateValue-> " + err);
-        return err
+        return error
     } finally {
         if (connection) {
             try {
@@ -197,7 +197,6 @@ async function queryTable(id) {
         console.log("Column metadata: ", result.metaData);
         console.log("Query results: ");
         console.log(JSON.parse(result.rows[0].DATA));
-
     } catch (err) {
         console.error(err);
         return error

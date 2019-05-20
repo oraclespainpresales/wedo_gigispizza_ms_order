@@ -62,14 +62,9 @@ app.put('/updateValue', async (req, res) => {
     let status  = req.body.status;
     console.log("Info: Param Received -> " + JSON.stringify(req.body));
     let resDB = await dbmanager.updateValue(orderid,"",status)
-    if (redDB === undefined)
-      red.send("error update value status");      
-    else {
-      res.send(resDB);
-      //Send message to stream queue with pizza status. 
-      postToStream(demozone,"ORDER-STATUS",orderid.toString(),status.toString());
-    }
-      
+    res.send(resDB);
+    //Send message to stream queue with pizza status. 
+    postToStream(demozone,"ORDER-STATUS",orderid.toString(),status.toString());
   }
   catch (err){
     console.error("Error: updateValue-> " + err);
