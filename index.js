@@ -141,7 +141,7 @@ function postToStream(demozone,microservice,orderid,messageString) {
         config
   ).then((res) => {
       console.log(" AXIOS statusCode: " + res.statusCode)
-      console.log(res)
+      //console.log(res)
   }).catch((error) => {
       console.error("AXIOS ERROR: " + error)
   });
