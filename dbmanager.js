@@ -123,7 +123,7 @@ async function insertValue(id,data) {
 }
 
 //################### Update Value ####################
-async function updateValue(id,field,value) {
+async function updateValue (id,field,value) {
     let connection;
     let result;
     try {
@@ -252,3 +252,4 @@ module.exports.dropTable = dropTable;
 module.exports.insertValue = insertValue;
 module.exports.queryTable = queryTable;
 module.exports.queryTableAll = queryTableAll;
+module.exports.updateValue = updateValue;
