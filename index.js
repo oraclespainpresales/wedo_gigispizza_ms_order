@@ -56,9 +56,10 @@ app.put('/updateValue', async (req, res) => {
   let status  = req.body.status;
   console.log("Info: Param Received -> " + JSON.stringify(req.body));
   let resDB = await dbmanager.updateValue(orderid,"data.order.status",status)
+  console.log("Info resDB: "+ resDB);
   res.send(resDB);
   //Send message to stream queue with pizza status. 
-  postToStream(demozone,"microservice-ORDER",orderId.toString(),status.toString());
+  postToStream(demozone,"microservice-ORDER",orderid.toString(),status.toString());
 });
 
 /* Get Order
