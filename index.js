@@ -54,7 +54,7 @@ app.post('/insertValue', async (req, res) => {
 app.put('/updateValue', async (req, res) => {   
   let orderid = req.body.orderId;
   let status  = req.body.status;
-  console.log("Info: Param Received -> " + JSON.stringify(body));
+  console.log("Info: Param Received -> " + JSON.stringify(req.body));
   let resDB = await dbmanager.updateValue(orderid,"data.order.status",status)
   res.send(resDB);
   //Send message to stream queue with pizza status. 
