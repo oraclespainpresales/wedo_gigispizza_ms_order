@@ -136,6 +136,8 @@ async function updateValue (id,field,value) {
         //Oracle 18c doesn't have a json_mergepath function, so we have to select the orderId DATA
         //atehn change the status value, and then update the DATA field again, all the json data.
         jsonData = queryTable(id);
+        if (jsonData == undefined) 
+            throw Error ("orderId not found!");
         console.log("Info: " + jsonData.status);
         jsonData.status = value;
         //Update data field
