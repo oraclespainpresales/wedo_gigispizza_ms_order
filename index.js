@@ -62,6 +62,7 @@ app.put('/updateValue', async (req, res) => {
     let status  = req.body.status;
     console.log("Info: Param Received -> " + JSON.stringify(req.body));
     let resDB = await dbmanager.updateValue(orderid,"",status)
+    console.log(resDB.toString());
     res.send(resDB);
     //Send message to stream queue with pizza status. 
     postToStream(demozone,"ORDER-STATUS",orderid.toString(),status.toString());
@@ -127,14 +128,14 @@ function getDateId(){
 }
 
 //############################ POST Axios ###################################
-function postToStream(demozone,microservice,orderid,messageString) {
+function postToStream(demozone,eventType,orderid,messageString) {
   // Build the post string from an object
   var post_data = JSON.stringify({
      "messages":
           [
             {
-              "key": demozone + "," + orderid + "," + microservice,
-              "value": "status: " + messageString
+              "key": demozone + "," + orderid + "," + eventType,
+              "value": messageString
             }
           ]
   });
@@ -150,7 +151,7 @@ function postToStream(demozone,microservice,orderid,messageString) {
         post_data, 
         config
   ).then((res) => {
-      console.log(" AXIOS statusCode: " + res.statusCode)
+      console.log(" AXIOS statusCode: " + res.status);
       //console.log(res)
   }).catch((error) => {
       console.error("AXIOS ERROR: " + error)
