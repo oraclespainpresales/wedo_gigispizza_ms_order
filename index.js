@@ -35,15 +35,20 @@ app.get('/createTable', async (req, res) => {
 *   *whatever*}
 */
 app.post('/insertValue', async (req, res) => {  
-  let orderId = getDateId();
-  let record = req.body
-  record['orderId'] = orderId
-  record['status'] = "PIZZA ORDERED" //Pizza status
-  let resDB = await dbmanager.insertValue(orderId ,record)
-  resDB['orderId'] = orderId
-  res.send(resDB);
-  //Send message to stream queue with pizza status. 
-  postToStream(demozone,"microservice-ORDER",orderId.toString(),record['status'].toString());
+  try{
+    let orderId = getDateId();
+    let record  = req.body
+    record['orderId'] = orderId
+    record['status'] = "PIZZA ORDERED" //Pizza status
+    let resDB = await dbmanager.insertValue(orderId ,record)
+    resDB['orderId'] = orderId
+    res.send(resDB);
+    //Send message to stream queue with pizza status. 
+    postToStream(demozone,"ORDER-STATUS",orderId.toString(),record['status'].toString());
+  }
+  catch(err){
+    console.error("Error: insertValue-> " + err);
+  }
 });
 
 //Change pizza order status
@@ -52,13 +57,18 @@ app.post('/insertValue', async (req, res) => {
 *  {"orderId":"#ID","status":"#status"}
 */
 app.put('/updateValue', async (req, res) => {   
-  let orderid = req.body.orderId;
-  let status  = req.body.status;
-  console.log("Info: Param Received -> " + JSON.stringify(req.body));
-  let resDB = await dbmanager.updateValue(orderid,"data.order.status",status)
-  res.send(resDB);
-  //Send message to stream queue with pizza status. 
-  postToStream(demozone,"microservice-ORDER",orderid.toString(),status.toString());
+  try{
+    let orderid = req.body.orderId;
+    let status  = req.body.status;
+    console.log("Info: Param Received -> " + JSON.stringify(req.body));
+    let resDB = await dbmanager.updateValue(orderid,"",status)
+    res.send(resDB);
+    //Send message to stream queue with pizza status. 
+    postToStream(demozone,"ORDER-STATUS",orderid.toString(),status.toString());
+  }
+  catch (err){
+    console.error("Error: insertValue-> " + err);
+  }
 });
 
 /* Get Order
@@ -72,7 +82,7 @@ app.post('/queryTable', async (req, res) => {
     resDB.rows.forEach(element => {
       resList.push(JSON.parse(element.DATA))
     });
-    console.log("INFO queryTable: " + resList)
+    console.log("INFO queryTable: " + JSON.stringify(resList));
     res.send(resList);
   }else{
     let resDB = await dbmanager.queryTable(req.body.orderId)
