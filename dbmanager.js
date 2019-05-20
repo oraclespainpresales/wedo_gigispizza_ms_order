@@ -133,12 +133,21 @@ async function updateValue (id,field,value) {
             password: dbConfig.password,
             connectString: dbConfig.connectString
         });
-        //Update fields
-        sql = "UPDATE pizzaOrder po SET po." + field + " = :2 WHERE po.id = :1";
-        console.log("Info: " + sql.toString());
-        binds = [id,value];
+        //Oracle 18c doesn't have a json_mergepath function, so we have to select the orderId DATA
+        //atehn change the status value, and then update the DATA field again, all the json data.
+        jsonData = queryTable(id);
+        console.log("Info: " + jsonData.status);
+        jsonData.status = value;
+        //Update data field
+        sql = "UPDATE pizzaOrder SET data = :2 WHERE id = :1";
+        console.log("Info: " + JSON.stringify(data));
+        binds = [[id,JSON.stringify(data)]];
         options = {
-            autoCommit: true
+            autoCommit: true,
+            bindDefs: [
+                { type: oracledb.STRING, maxSize: 20 },
+                { type: oracledb.STRING, maxSize: 32767 }                
+            ]
         };
         result = await connection.execute(sql, binds, options);
         console.log("Info: Number of rows modified:", result.rowsAffected);
