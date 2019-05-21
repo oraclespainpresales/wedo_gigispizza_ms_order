@@ -71,13 +71,14 @@ app.put('/updateValue', async (req, res) => {
 
 /* Get Order
 *  Payload:
-*  {"orderId":"#ID"}
+*  {"orderId":"#ID","status":"#status"}
 */
 app.post('/queryTable', async (req, res) => {
   let resDB;
-  if(req.body['orderId'] == null || req.body['orderId'] == ""){
-    console.log("Info: status request-> " + req.body['status']);
-    if(req.body['status'] == null || req.body['status'] == ""){
+  console.log("Info: Param Received -> " + JSON.stringify(req.body));
+  if(req.body.orderId == null || req.body.orderId == ""){
+    console.log("Info: status request-> " + req.body.status);
+    if(req.body.status == null || req.body.status == ""){
       console.log("Info: Query ALL")
       resDB = await dbmanager.queryTableAll()
     }
