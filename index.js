@@ -75,27 +75,33 @@ app.put('/updateValue', async (req, res) => {
 */
 app.post('/queryTable', async (req, res) => {
   let resDB;
-  console.log("Info: Param Received -> " + JSON.stringify(req.body));
-  if(req.body.orderId == null || req.body.orderId == ""){
-    console.log("Info: status request-> " + req.body.status);
-    if(req.body.status == null || req.body.status == ""){
-      console.log("Info: Query ALL")
-      resDB = await dbmanager.queryTableAll()
+  try{
+    console.log("Info: Param Received -> " + JSON.stringify(req.body));
+    if(req.body.orderId == null || req.body.orderId == ""){
+      console.log("Info: status request-> " + req.body.status);
+      if(req.body.status == null || req.body.status == ""){
+        console.log("Info: Query ALL")
+        resDB = await dbmanager.queryTableAll()
+      }
+      else {
+        console.log("Info: Query status-> " + req.body['status'])
+        resDB = await dbmanager.queryTableStatus(req.body['status'])
+      }
+      let resList = []
+      resDB.rows.forEach(element => {
+        resList.push(JSON.parse(element.DATA))
+      });
+      console.log("INFO queryTable: " + JSON.stringify(resList));
+      res.send(resList);
     }
     else {
-      console.log("Info: Query status-> " + req.body['status'])
-      resDB = await dbmanager.queryTableStatus(req.body['status'])
+      resDB = await dbmanager.queryTable(req.body.orderId)
+      res.send(resDB);
     }
-    let resList = []
-    resDB.rows.forEach(element => {
-      resList.push(JSON.parse(element.DATA))
-    });
-    console.log("INFO queryTable: " + JSON.stringify(resList));
-    res.send(resList);
   }
-  else {
-    resDB = await dbmanager.queryTable(req.body.orderId)
-    res.send(resDB);
+  catch (err){
+    console.error("Error: msorder /queryTable-> " + err)
+    res.send({"error":err})
   }
 });
 
