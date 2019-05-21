@@ -178,7 +178,7 @@ async function queryTableStatus(status) {
     return result;
 }
 async function queryTable(id) {
-    let sql = "SELECT id, data FROM pizzaOrder WHERE id = '"+ id +"' AND data IS JSON";
+    let sql    = "SELECT id, data FROM pizzaOrder WHERE id = '"+ id +"' AND data IS JSON";
     let result = await queryTablePizzaOrder(sql);
     return result;
 }
@@ -202,7 +202,7 @@ async function queryTablePizzaOrder(sql) {
 
         console.log("Column metadata: ", result.metaData);
         console.log("Query results: ");
-        console.log(JSON.parse(result));
+        console.log(result);
     } catch (err) {
         console.error(err);
         return error
@@ -242,7 +242,7 @@ async function queryTableAll() {
 
         console.log("Column metadata: ", result.metaData);
         console.log("Query results: ");
-        console.log(JSON.parse(result));
+        console.log(result);
 
     } catch (err) {
         console.error(err);
