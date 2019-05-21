@@ -74,16 +74,23 @@ app.put('/updateValue', async (req, res) => {
 *  {"orderId":"#ID"}
 */
 app.post('/queryTable', async (req, res) => {
+  let resDB;
   if(req.body['orderId'] == null || req.body['orderId'] == ""){
-    let resDB = await dbmanager.queryTableAll()
+    if(req.body['status'] == null || req.body['status'] == ""){
+      resDB = await dbmanager.queryTableAll()
+    }
+    else {
+      resDB   = await dbmanager.queryTableStatus(req.body['status'])
+    }
     let resList = []
-    resDB.rows.forEach(element => {
-      resList.push(JSON.parse(element.DATA))
-    });
-    console.log("INFO queryTable: " + JSON.stringify(resList));
-    res.send(resList);
-  }else{
-    let resDB = await dbmanager.queryTable(req.body.orderId)
+      resDB.rows.forEach(element => {
+        resList.push(JSON.parse(element.DATA))
+      });
+      console.log("INFO queryTable: " + JSON.stringify(resList));
+      res.send(resList);
+  }
+  else {
+    resDB = await dbmanager.queryTable(req.body.orderId)
     res.send(resDB);
   }
 });

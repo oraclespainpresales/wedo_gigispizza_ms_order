@@ -172,21 +172,27 @@ async function updateValue (id,field,value) {
 
 
 //################### Get Value ####################
+async function queryTableStatus(status) {
+    let sql    = "SELECT * FROM (SELECT TREAT(data as JSON) as json_data FROM pizzaOrder) po WHERE po.json_data.status='" + status + "'";
+    let result = await queryTablePizzaOrder(sql);
+    return result;
+}
 async function queryTable(id) {
+    let sql = "SELECT id, data FROM pizzaOrder WHERE id = '"+ id +"' AND data IS JSON";
+    let result = await queryTablePizzaOrder(sql);
+    return result;
+}
+async function queryTablePizzaOrder(sql) {
     let connection;
     let result;
     try {
-
-        let sql, binds, options;
-
+        let binds, options;
         connection = await oracledb.getConnection({
             user: dbConfig.user,
             password: dbConfig.password,
             connectString: dbConfig.connectString
         });
 
-
-        sql = "SELECT id, data FROM pizzaOrder WHERE id = '"+ id +"' AND data IS JSON";
         binds = {};
         options = {
             outFormat: oracledb.OBJECT  
