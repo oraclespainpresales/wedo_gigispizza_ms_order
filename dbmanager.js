@@ -173,7 +173,7 @@ async function updateValue (id,field,value) {
 
 //################### Get Value ####################
 async function queryTableStatus(status) {
-    let sql    = "SELECT * FROM (SELECT TREAT(data as JSON) as json_data FROM pizzaOrder) po WHERE po.json_data.status='" + status + "'";
+    let sql    = "SELECT po.* FROM (SELECT TREAT(data as JSON) as json_data FROM pizzaOrder) po WHERE po.json_data.status like '" + status + "'";
     let result = await queryTablePizzaOrder(sql);
     return result;
 }
