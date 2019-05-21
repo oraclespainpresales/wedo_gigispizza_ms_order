@@ -202,7 +202,7 @@ async function queryTablePizzaOrder(sql) {
 
         console.log("Column metadata: ", result.metaData);
         console.log("Query results: ");
-        console.log(result);
+        console.log(JSON.parse(result.rows.DATA));
     } catch (err) {
         console.error(err);
         return error
@@ -210,7 +210,7 @@ async function queryTablePizzaOrder(sql) {
         if (connection) {
             try {
                 await connection.close();
-                return JSON.parse(result.rows[0].DATA)
+                return result
             } catch (err) {
                 console.error(err);
                 return error
@@ -242,8 +242,7 @@ async function queryTableAll() {
 
         console.log("Column metadata: ", result.metaData);
         console.log("Query results: ");
-        console.log(result);
-
+        console.log(JSON.parse(result));
     } catch (err) {
         console.error(err);
         return error
