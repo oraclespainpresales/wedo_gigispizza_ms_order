@@ -205,7 +205,7 @@ async function queryTablePizzaOrder(sql) {
         console.log(JSON.parse(result.rows[0].DATA));
     } catch (err) {
         console.error(err);
-        return {"error":err}
+        return error
     } finally {
         if (connection) {
             try {
@@ -213,7 +213,7 @@ async function queryTablePizzaOrder(sql) {
                 return JSON.parse(result.rows[0].DATA)
             } catch (err) {
                 console.error(err);
-                return {"error":err}
+                return error
             }
         }
     }
@@ -248,7 +248,7 @@ async function queryTableAll() {
 
     } catch (err) {
         console.error(err);
-        return {"error":err}
+        return error
     } finally {
         if (connection) {
             try {
@@ -256,7 +256,7 @@ async function queryTableAll() {
                 return result
             } catch (err) {
                 console.error(err);
-                return {"error":err}
+                return error
             }
         }
     }
