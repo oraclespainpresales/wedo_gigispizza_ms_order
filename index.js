@@ -87,11 +87,11 @@ app.post('/queryTable', async (req, res) => {
       resDB = await dbmanager.queryTableStatus(req.body['status'])
     }
     let resList = []
-      resDB.rows.forEach(element => {
-        resList.push(JSON.parse(element.DATA))
-      });
-      console.log("INFO queryTable: " + JSON.stringify(resList));
-      res.send(resList);
+    resDB.rows.forEach(element => {
+      resList.push(JSON.parse(element.DATA))
+    });
+    console.log("INFO queryTable: " + JSON.stringify(resList));
+    res.send(resList);
   }
   else {
     resDB = await dbmanager.queryTable(req.body.orderId)

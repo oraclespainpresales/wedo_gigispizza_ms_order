@@ -173,7 +173,7 @@ async function updateValue (id,field,value) {
 
 //################### Get Value ####################
 async function queryTableStatus(status) {
-    let sql    = "SELECT * FROM (SELECT TREAT(data as JSON) as data FROM pizzaOrder) po WHERE po.data.status like '" + status + "'";
+    let sql    = "SELECT po.data.orderId as id, po.data as data FROM (SELECT TREAT(data as JSON) as data FROM pizzaOrder) po WHERE po.data.status like '" + status + "'";
     let result = await queryTablePizzaOrder(sql);
     return result;
 }
@@ -202,7 +202,7 @@ async function queryTablePizzaOrder(sql) {
 
         console.log("Column metadata: ", result.metaData);
         console.log("Query results: ");
-        console.log(JSON.parse(result.rows[0].DATA));
+        console.log(JSON.parse(result));
     } catch (err) {
         console.error(err);
         return error
@@ -232,8 +232,6 @@ async function queryTableAll() {
             connectString: dbConfig.connectString
         });
 
-
-
         sql = "SELECT id, data FROM pizzaOrder WHERE data IS JSON ORDER BY timestamp DESC";
         binds = {};
         options = {
@@ -244,7 +242,7 @@ async function queryTableAll() {
 
         console.log("Column metadata: ", result.metaData);
         console.log("Query results: ");
-        console.log(result);
+        console.log(JSON.parse(result));
 
     } catch (err) {
         console.error(err);
