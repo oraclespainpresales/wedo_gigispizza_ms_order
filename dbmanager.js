@@ -268,3 +268,4 @@ module.exports.insertValue = insertValue;
 module.exports.queryTable = queryTable;
 module.exports.queryTableAll = queryTableAll;
 module.exports.updateValue = updateValue;
+module.exports.updateValue = queryTableStatus;
