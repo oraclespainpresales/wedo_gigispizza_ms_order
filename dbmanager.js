@@ -262,10 +262,10 @@ async function queryTableAll() {
     }
 }
 
-module.exports.createTable = createTable;
-module.exports.dropTable = dropTable;
-module.exports.insertValue = insertValue;
-module.exports.queryTable = queryTable;
-module.exports.queryTableAll = queryTableAll;
-module.exports.updateValue = updateValue;
-module.exports.updateValue = queryTableStatus;
+module.exports.createTable      = createTable;
+module.exports.dropTable        = dropTable;
+module.exports.insertValue      = insertValue;
+module.exports.queryTable       = queryTable;
+module.exports.queryTableAll    = queryTableAll;
+module.exports.updateValue      = updateValue;
+module.exports.queryTableStatus = queryTableStatus;
