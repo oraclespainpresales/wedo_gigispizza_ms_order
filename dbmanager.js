@@ -222,7 +222,7 @@ async function queryTable(id) {
     }
 }
 
-async function queryTableStatus(status) {
+async function queryTableStatus(statusRule) {
     let connection;
     let result;
     try {
@@ -238,7 +238,7 @@ async function queryTableStatus(status) {
             outFormat: oracledb.OBJECT  
         };
 
-        let sql    = "SELECT po.data.orderId as id, po.data as data FROM (SELECT TREAT(data as JSON) as data FROM pizzaOrder) po WHERE po.data.status like '" + status + "'";
+        let sql    = "SELECT po.data.orderId as id, po.data as data FROM (SELECT TREAT(data as JSON) as data FROM pizzaOrder) po WHERE po.data.status '" + statusRule + "'";
 
         result = await connection.execute(sql, binds, options);
 
