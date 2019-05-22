@@ -211,7 +211,7 @@ async function queryTablePizzaOrder1(sql) {
         if (connection) {
             try {
                 await connection.close();
-                return result.rows[0].DATA
+                return (JSON.parse(result.rows[0].DATA))
             } catch (err) {
                 console.error(err);
                 return error
