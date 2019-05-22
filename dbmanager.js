@@ -235,7 +235,7 @@ async function queryTableStatus(statusRule) {
 
         binds = {};
         options = {
-            outFormat: oracledb.OBJECT  
+            outFormat: oracledb.ARRAY
         };
 
         let sql    = "SELECT po.data.orderId as id, po.data as data FROM (SELECT TREAT(data as JSON) as data FROM pizzaOrder) po WHERE po.data.status " + statusRule;
@@ -243,7 +243,7 @@ async function queryTableStatus(statusRule) {
         result = await connection.execute(sql, binds, options);
 
         console.log("Column metadata: ", result.metaData);
-        console.log("Query results: ");
+        console.log("Query results: " + result.rows.length);
         console.log(JSON.parse(result));
     } catch (err) {
         console.error(err);
