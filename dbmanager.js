@@ -238,7 +238,7 @@ async function queryTableStatus(statusRule) {
             outFormat: oracledb.OBJECT  
         };
 
-        let sql    = "SELECT po.data.orderId as id, po.data as data FROM (SELECT TREAT(data as JSON) as data FROM pizzaOrder) po WHERE po.data.status '" + statusRule + "'";
+        let sql    = "SELECT po.data.orderId as id, po.data as data FROM (SELECT TREAT(data as JSON) as data FROM pizzaOrder) po WHERE po.data.status " + statusRule;
 
         result = await connection.execute(sql, binds, options);
 
