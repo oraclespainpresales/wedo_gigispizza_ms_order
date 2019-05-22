@@ -201,7 +201,7 @@ async function queryTablePizzaOrder1(sql) {
 
         result = await connection.execute(sql, binds, options);
 
-        console.log("Column metadata: ", result.metaData);
+        console.log("Column metadat: ", result.metaData);
         console.log("Query results: ");
         console.log(JSON.parse(result.rows[0].DATA));
     } catch (err) {
