@@ -101,7 +101,7 @@ app.post('/queryTable', async (req, res) => {
   }
   catch (err){
     console.error("Error: msorder /queryTable-> " + err)
-    res.send({"error":err})
+    res.send({"error":err.toString()})
   }
 });
 

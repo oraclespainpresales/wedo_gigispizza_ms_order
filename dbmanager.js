@@ -244,7 +244,7 @@ async function queryTableStatus(statusRule) {
 
         console.log("Column metadata: ", result.metaData);
         console.log("Query results: ");
-        console.log(JSON.parse(result.rows.DATA));
+        console.log(JSON.parse(result));
     } catch (err) {
         console.error(err);
         return error
