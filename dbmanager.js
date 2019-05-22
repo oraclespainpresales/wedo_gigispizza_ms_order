@@ -179,9 +179,47 @@ async function queryTableStatus(status) {
 }
 async function queryTable(id) {
     let sql    = "SELECT id, data FROM pizzaOrder WHERE id = '"+ id +"' AND data IS JSON";
-    let result = await queryTablePizzaOrder(sql);
+    let result = await queryTablePizzaOrder1(sql);
     return result;
 }
+
+async function queryTablePizzaOrder1(sql) {
+    let connection;
+    let result;
+    try {
+        let binds, options;
+        connection = await oracledb.getConnection({
+            user: dbConfig.user,
+            password: dbConfig.password,
+            connectString: dbConfig.connectString
+        });
+
+        binds = {};
+        options = {
+            outFormat: oracledb.OBJECT  
+        };
+
+        result = await connection.execute(sql, binds, options);
+
+        console.log("Column metadata: ", result.metaData);
+        console.log("Query results: ");
+        console.log(JSON.parse(result.rows[0].DATA));
+    } catch (err) {
+        console.error(err);
+        return error
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+                return result.rows[0].DATA
+            } catch (err) {
+                console.error(err);
+                return error
+            }
+        }
+    }
+}
+
 async function queryTablePizzaOrder(sql) {
     let connection;
     let result;
