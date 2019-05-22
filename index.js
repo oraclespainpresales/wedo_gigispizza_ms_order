@@ -84,8 +84,8 @@ app.post('/queryTable', async (req, res) => {
         resDB = await dbmanager.queryTableAll()
       }
       else {
-        console.log("Info: Query status-> " + req.body['status'])
-        resDB = await dbmanager.queryTableStatus(req.body['status'])
+        console.log("Info: Query status-> " + req.body.status)
+        resDB = await dbmanager.queryTableStatus(req.body.status)
       }
       let resList = []
       resDB.rows.forEach(element => {

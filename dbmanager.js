@@ -172,7 +172,7 @@ async function updateValue (id,field,value) {
 
 
 //################### Get Value ####################
-async function queryTableStatus(status) {
+/*async function queryTableStatus(status) {
     let sql    = "SELECT po.data.orderId as id, po.data as data FROM (SELECT TREAT(data as JSON) as data FROM pizzaOrder) po WHERE po.data.status like '" + status + "'";
     let result = await queryTablePizzaOrder(sql);
     return result;
@@ -182,8 +182,8 @@ async function queryTable(id) {
     let result = await queryTablePizzaOrder1(sql);
     return result;
 }
-
-async function queryTablePizzaOrder1(sql) {
+*/
+async function queryTable(id) {
     let connection;
     let result;
     try {
@@ -193,6 +193,8 @@ async function queryTablePizzaOrder1(sql) {
             password: dbConfig.password,
             connectString: dbConfig.connectString
         });
+        
+        let sql    = "SELECT id, data FROM pizzaOrder WHERE id = '"+ id +"' AND data IS JSON";
 
         binds = {};
         options = {
@@ -220,7 +222,7 @@ async function queryTablePizzaOrder1(sql) {
     }
 }
 
-async function queryTablePizzaOrder(sql) {
+async function queryTableStatus(status) {
     let connection;
     let result;
     try {
@@ -235,6 +237,8 @@ async function queryTablePizzaOrder(sql) {
         options = {
             outFormat: oracledb.OBJECT  
         };
+
+        let sql    = "SELECT po.data.orderId as id, po.data as data FROM (SELECT TREAT(data as JSON) as data FROM pizzaOrder) po WHERE po.data.status like '" + status + "'";
 
         result = await connection.execute(sql, binds, options);
 
