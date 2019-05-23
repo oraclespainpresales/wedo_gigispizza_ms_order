@@ -9,8 +9,8 @@ const axios = require('axios')
 // Constants
 const demozone = "MADRID";
 const PORT = 8080 || process.env.ORD_PORT;
-//const HOST = '0.0.0.0' || process.env.ORD_HOST;
-const HOST = 'localhost' || process.env.ORD_HOST;
+const HOST = '0.0.0.0' || process.env.ORD_HOST;
+//const HOST = 'localhost' || process.env.ORD_HOST;
 
 const dbmanager = require("./dbmanager.js")
 
