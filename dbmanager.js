@@ -108,7 +108,7 @@ async function insertValue(id,data) {
 
     } catch (err) {
         console.error(err);
-        return error
+        throw Error(err)
     } finally {
         if (connection) {
             try {
@@ -116,7 +116,7 @@ async function insertValue(id,data) {
                 return result
             } catch (err) {
                 console.error(err);
-                return error
+                throw Error(err)
             }
         }
     }
@@ -138,9 +138,9 @@ async function updateValue (id,field,value) {
         let jsonData = await queryTable(id);
         if (jsonData === undefined) 
             throw Error ("orderId not found!");
-        console.log("Info: order status-> " + jsonData.status);
+        console.log("Info: order status-> ", jsonData.status);
         jsonData.status = value;
-        console.log("Info: new order status-> " + jsonData.status);
+        console.log("Info: new order status-> ",jsonData.status);
         //Update data field
         sql = "UPDATE pizzaOrder SET data = '" + JSON.stringify(jsonData) + "' WHERE id = " + id;
         console.log("Info: sql update-> " + sql);
@@ -155,8 +155,8 @@ async function updateValue (id,field,value) {
         result = await connection.execute(sql, binds, options);
         console.log("Info: Number of rows modified:", result.rowsAffected);
     } catch (err) {
-        console.error("Error: updateValue-> " + err);
-        return error
+        console.error("Error: updateValue-> ", err);
+        throw Error(err)
     } finally {
         if (connection) {
             try {
@@ -164,7 +164,7 @@ async function updateValue (id,field,value) {
                 return result
             } catch (err) {
                 console.error(err);
-                return error
+                throw Error(err)
             }
         }
     }
@@ -193,29 +193,34 @@ async function queryTableOrderId(id) {
         result = await connection.execute(sql, binds, options);
 
         console.log("Column metadat: ", result.metaData);
-        console.log("Query results: ");
-        console.log(JSON.parse(result.rows[0].DATA));
+        console.log("Query results: ", result.rows.length);
+        if (result.rows.length == 1)
+            console.log(JSON.parse(result.rows[0].DATA));
     } catch (err) {
         console.error(err);
-        return error
+        throw Error(err)
     } finally {
         if (connection) {
             try {
                 await connection.close();
-                return (JSON.parse(result.rows[0].DATA))
+                if (result.rows.length == 1)
+                    return (JSON.parse(result.rows[0].DATA))
+                else
+                    return ({"result":"orderId " + id + " not found"})
             } catch (err) {
                 console.error(err);
-                return error
+                throw Error(err)
             }
         }
     }
 }
 
-async function queryTableWhere(where) {
+async function queryTableWhere(whereClause) {
     let connection;
     let result;
     try {
-        let binds, options;
+        let binds, options
+        let wherePhrase = "";
         
         connection = await oracledb.getConnection({
             user: dbConfig.user,
@@ -223,14 +228,21 @@ async function queryTableWhere(where) {
             connectString: dbConfig.connectString
         });
 
-        let whereList = []
-        where.forEach(element => {
-            whereList.push(JSON.parse(element.DATA))
+        //console.log("where clause-> ", JSON.stringify(whereClause))        
+        //console.log("where clause-> ", JSON.stringify(whereClause.where))        
+        whereClause.where.forEach(element => {
+            let strCond = "po.data." + element.cond.field + " " + element.cond.operator + " " + element.cond.value; 
+            if (element.relation != ""){
+                strCond += " " + element.relation + " ";
+            }
+            //console.log("where clause-> ", strCond)
+            wherePhrase += strCond;
         });
-        console.log("where clause-> " + JSON.stringify(whereList))
+        
+        //console.log("where clause-> ", wherePhrase)
 
-        let sql = "SELECT po.data.orderId as id, po.data as data FROM (SELECT TREAT(data as JSON) as data FROM pizzaOrder) po WHERE po.data.status " + where;
-
+        let sql = "SELECT po.data.orderId as id, po.data as data FROM (SELECT TREAT(data as JSON) as data FROM pizzaOrder) po WHERE " + wherePhrase;
+        console.log("where clause-> ", sql)
         binds = {};
         options = {
             outFormat: oracledb.OBJECT
@@ -239,19 +251,24 @@ async function queryTableWhere(where) {
         result = await connection.execute(sql, binds, options);
 
         console.log("Column metadata: ", result.metaData);
-        console.log("Query results: " + result.rows.length);
-        console.log(JSON.parse(result));
+        console.log("Query results: ", result.rows.length);
+        if (result.rows.length > 0)
+            console.log(JSON.stringify(result))
     } catch (err) {
         console.error(err);
-        return error
+        throw Error (err)
     } finally {
         if (connection) {
             try {
                 await connection.close();
+                if (result.rows.length > 0)
+                    return result
+                else
+                    return ({"result":"order not found"})
                 return result
             } catch (err) {
                 console.error(err);
-                return error
+                throw Error (err)
             }
         }
     }
@@ -279,8 +296,7 @@ async function queryTableAll() {
         result = await connection.execute(sql, binds, options);
 
         console.log("Column metadata: ", result.metaData);
-        console.log("Query results: ");
-        console.log(JSON.parse(result));
+        console.log("Query results: ", result.rows.length);
     } catch (err) {
         console.error(err);
         return error
@@ -300,7 +316,7 @@ async function queryTableAll() {
 module.exports.createTable       = createTable;
 module.exports.dropTable         = dropTable;
 module.exports.insertValue       = insertValue;
-module.exports.queryTable        = queryTable;
+//module.exports.queryTable        = queryTable;
 module.exports.queryTableAll     = queryTableAll;
 module.exports.updateValue       = updateValue;
 module.exports.queryTableWhere   = queryTableWhere;
