@@ -172,7 +172,7 @@ async function updateValue (id,field,value) {
 
 
 //################### Get Value ####################
-async function queryTable(id) {
+async function queryTableOrderId(id) {
     let connection;
     let result;
     try {
@@ -211,23 +211,30 @@ async function queryTable(id) {
     }
 }
 
-async function queryTableStatus(statusRule) {
+async function queryTableWhere(where) {
     let connection;
     let result;
     try {
         let binds, options;
+        
         connection = await oracledb.getConnection({
             user: dbConfig.user,
             password: dbConfig.password,
             connectString: dbConfig.connectString
         });
 
+        let whereList = []
+        where.forEach(element => {
+            whereList.push(JSON.parse(element.DATA))
+        });
+        console.log("where clause-> " + JSON.stringify(whereList))
+
+        let sql = "SELECT po.data.orderId as id, po.data as data FROM (SELECT TREAT(data as JSON) as data FROM pizzaOrder) po WHERE po.data.status " + where;
+
         binds = {};
         options = {
             outFormat: oracledb.OBJECT
-        };
-
-        let sql    = "SELECT po.data.orderId as id, po.data as data FROM (SELECT TREAT(data as JSON) as data FROM pizzaOrder) po WHERE po.data.status " + statusRule;
+        };    
 
         result = await connection.execute(sql, binds, options);
 
@@ -290,10 +297,11 @@ async function queryTableAll() {
     }
 }
 
-module.exports.createTable      = createTable;
-module.exports.dropTable        = dropTable;
-module.exports.insertValue      = insertValue;
-module.exports.queryTable       = queryTable;
-module.exports.queryTableAll    = queryTableAll;
-module.exports.updateValue      = updateValue;
-module.exports.queryTableStatus = queryTableStatus;
+module.exports.createTable       = createTable;
+module.exports.dropTable         = dropTable;
+module.exports.insertValue       = insertValue;
+module.exports.queryTable        = queryTable;
+module.exports.queryTableAll     = queryTableAll;
+module.exports.updateValue       = updateValue;
+module.exports.queryTableWhere   = queryTableWhere;
+module.exports.queryTableOrderId = queryTableOrderId;

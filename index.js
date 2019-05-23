@@ -66,52 +66,53 @@ app.put('/updateValue', async (req, res) => {
     postToStream(demozone,"ORDER-STATUS",orderid.toString(),status.toString());
   }).catch((err) => {
     console.log("Error: index-updateValue-> " + err);
+    res.send("Error: index-updateValue-> " + err);
   })    
 });
 
 /* Get Order
 *  Payload:
-*  {"orderId":"#ID","status":"#status"}
+*  {"orderId":"#ID"}
+*/
+app.post('/queryTableOrderId', async (req, res) => {
+  await dbmanager.queryTable(req.body.orderId).then((resDB)=>{
+    res.send(resDB);   
+  }).catch ((err) => {
+    console.error("Error: msorder /queryTable-> " + err)
+    res.send({"error":err.toString()})
+  })
+});
+
+/* Get Order
+*  Payload:
+*  {"orderId":"#ID","where":"#where_clause"}
 */
 app.post('/queryTable', async (req, res) => {
-  let resDB;
-  try{
-    console.log("Info: Param Received -> " + JSON.stringify(req.body));
-    if(req.body.orderId == null || req.body.orderId == ""){
-      console.log("Info: status request-> " + req.body.status);
-      if(req.body.status == null || req.body.status == ""){
-        console.log("Info: Query ALL")
-        resDB = await dbmanager.queryTableAll()
-      }
-      else {
-        console.log("Info: Query status-> " + req.body.status)
-        resDB = await dbmanager.queryTableStatus(req.body.status)
-      }
+  await dbmanager.queryTableStatus(req.body.where).then((resDB)=>{
       let resList = []
       resDB.rows.forEach(element => {
         resList.push(JSON.parse(element.DATA))
       });
       console.log("INFO queryTable: " + JSON.stringify(resList));
       res.send(resList);
-    }
-    else {
-      resDB = await dbmanager.queryTable(req.body.orderId)
-      res.send(resDB);
-    }
-  }
-  catch (err){
+    
+  }).catch ((err) => {
     console.error("Error: msorder /queryTable-> " + err)
     res.send({"error":err.toString()})
-  }
+  })  
 });
 
-//Get the last element inserted
+//Get last element
 app.get('/getAll', async (req, res) => { 
-  let resDB = await dbmanager.queryTableAll()
-  resDB.rows.forEach(element => {
-    element.DATA.dateTimeOrderTaken
-  });
-  res.send(resDB);
+  await dbmanager.queryTableAll().then((resDB) => {
+    resDB.rows.forEach(element => {
+      element.DATA.dateTimeOrderTaken;
+    });
+    res.send(resDB);
+  }).catch((err) => {
+    console.log("Error: index-updateValue-> " + err);
+    res.send("Error: index-updateValue-> " + err);
+  })
 });
 
 app.listen(PORT, HOST);
