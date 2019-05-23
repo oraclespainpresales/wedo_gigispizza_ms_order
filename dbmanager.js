@@ -263,7 +263,7 @@ async function queryTableAll() {
             connectString: dbConfig.connectString
         });
 
-        sql = "SELECT id, data FROM pizzaOrder WHERE data IS JSON ORDER BY timestamp ASC";
+        sql = "SELECT id, data FROM pizzaOrder WHERE data IS JSON ORDER BY timestamp DESC";
         binds = {};
         options = {
             outFormat: oracledb.OBJECT   // query result format
