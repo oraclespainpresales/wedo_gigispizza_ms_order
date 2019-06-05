@@ -13,7 +13,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
+kind: Service
+apiVersion: v1
+metadata:
+  name: microservice-order
+  namespace: default
+  labels:
+    app: microservice-order
+spec:
+  type: ClusterIP
+  selector:
+    app: microservice-order
+  ports:
+  - port: 8080
+    targetPort: 8080
+    name: http
+---
 kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
@@ -41,20 +56,4 @@ spec:
       imagePullSecrets:
       - name: ocirsecret
       restartPolicy: Always
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: microservice-order
-  namespace: default
-  labels:
-    app: microservice-order
-spec:
-  type: ClusterIP
-  selector:
-    app: microservice-order
-  ports:
-  - port: 8080
-    targetPort: 8080
-    name: http
 ---
