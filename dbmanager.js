@@ -91,7 +91,7 @@ async function insertValue(id,data) {
         // Insert some data
 
         sql = `INSERT INTO pizzaOrder VALUES (:1, :2, :3)`;
-        console.log("Insert: id: " + id, "Data: " + data)
+        console.log("Insert: id: " + id, "Data: " + JSON.stringify(data))
         let date = Date.now()
         binds = [[id, JSON.stringify(data), date]];
         options = {
