@@ -241,7 +241,7 @@ async function queryTableWhere(whereClause) {
         
         //console.log("where clause-> ", wherePhrase)
 
-        let sql = "SELECT po.data.orderId as id, po.data as data FROM (SELECT TREAT(data as JSON) as data FROM pizzaOrder) po WHERE " + wherePhrase;
+        let sql = "SELECT po.data.orderId as id, po.data as data FROM (SELECT TREAT(data as JSON) as data FROM pizzaOrder) po WHERE " + wherePhrase + " ORDER BY 1 DESC";
         console.log("where clause-> ", sql)
         binds = {};
         options = {
