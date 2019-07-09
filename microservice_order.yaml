@@ -56,4 +56,5 @@ spec:
       imagePullSecrets:
       - name: ocirsecret
       restartPolicy: Always
+      nodeSelector: PRO
 ---
