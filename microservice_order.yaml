@@ -44,7 +44,7 @@ spec:
     spec:
       containers:
       - name: microservice-order
-        image:  fra.ocir.io/wedoinfra/wedodevops/msorder:latest
+        image:  fra.ocir.io/wedoinfra/wedodevops/madrid/msorder:latest
         env:
         - name: ORD_PORT
           value: "8080"
